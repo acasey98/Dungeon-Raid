@@ -1,0 +1,10 @@
+{
+    "ogreFight": {
+      "enctrType": "enemy",
+      "enemyid": "BOgre",
+      "startTxt": "A massive ogre stands before you!",
+      "endTxt": "That ogre wasn't a problem at all!",
+      "finalEnctr": false,
+      "itemDropid": "HPpot(S)"
+    }
+}
