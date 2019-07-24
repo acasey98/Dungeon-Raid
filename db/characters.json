@@ -1,0 +1,11 @@
+{
+    "character1": {
+      "uid": "12345",
+      "playerHP": 45,
+      "VIT": 1,
+      "STR": 1,
+      "DEX": 1,
+      "WIS": 1,
+      "LCK": 1
+    }
+}

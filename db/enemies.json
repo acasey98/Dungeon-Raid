@@ -1,0 +1,11 @@
+{
+    "BOgre": {
+      "name": "Big Stupid Ogre",
+      "enemyHP": 60,
+      "enemyATK": 20,
+      "atkTxt": "The ogre attacks!",
+      "evdTxt": "You evaded the ogre's attack!",
+      "dmgTxt": "The ogre howls in pain!",
+      "dthTxt": "The ogre falls over dead."
+    }
+  }
