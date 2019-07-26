@@ -44,10 +44,11 @@ class ChooseItem extends React.Component {
     const itemId = e.target.id.split('_')[0];
     const itemChrgs = e.target.id.split('_')[1];
     // const itemChrgs = itemB4.toString();
-    Chars.getCurrentChar(firebase.auth().currentUser)
+    Chars.getCurrentChar(firebase.auth().currentUser.uid)
       .then((char) => {
+        console.error(firebase.auth().currentUser.uid);
         const newItem = {
-          charid: char.id,
+          charid: char[0].id,
           itemid: itemId,
           currCharges: itemChrgs,
           modifier: '',

@@ -10,12 +10,14 @@ const getCurrentChar = uid => new Promise((resolve, reject) => {
     .get(`${baseUrl}/characters.json?orderBy="uid"&equalTo="${uid}"`)
     .then((res) => {
       const characters = [];
+      console.error(uid);
       if (res.data !== null) {
         Object.keys(res.data).forEach((fbKey) => {
           res.data[fbKey].id = fbKey;
           characters.push(res.data[fbKey]);
         });
       }
+      console.error(characters);
       resolve(characters);
     })
     .catch(err => reject(err));
