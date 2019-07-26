@@ -1,0 +1,42 @@
+{
+    "HPpotS_": {
+      "name": "Health Potion (Small)",
+      "usesCharges": true,
+      "maxCharges": 1,
+      "isPassive": false,
+      "dropChance": 25,
+      "desc": "A small potion that restores 80 HP. One time use."
+    },
+    "HPpotM_": {
+      "name": "Health Potion (Medium)",
+      "usesCharges": true,
+      "maxCharges": 2,
+      "isPassive": false,
+      "dropChance": 15,
+      "desc": "A medium potion that restores 60 HP. Two time use."
+    },
+    "HPpotL_": {
+      "name": "Health Potion (Large)",
+      "usesCharges": true,
+      "maxCharges": 3,
+      "isPassive": false,
+      "dropChance": 10,
+      "desc": "A large potion that restores 50 HP. Three time use."
+    },
+    "RestoRing_": {
+      "name": "Ring of Restoration",
+      "usesCharges": false,
+      "maxCharges": 0,
+      "isPassive": true,
+      "dropChance": 10,
+      "desc": "A ring that restores 15hp to the wearer after an enemy attack."
+    },
+    "Firebomb_": {
+      "name": "Firebomb",
+      "usesCharges": true,
+      "maxCharges": 1,
+      "isPassive": false,
+      "dropChance": 10,
+      "desc": "A bomb that can be used to inflict 50 damage to an enemy."
+  }
+}
