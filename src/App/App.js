@@ -9,6 +9,8 @@ import 'firebase/auth';
 import Base from '../components/Base/Base';
 import Logout from '../components/Logout/Logout';
 import Auth from '../components/Auth/Auth';
+import ChooseItem from '../components/Base/ChooseItem/ChooseItem';
+import Adventure from '../components/Adventure/Adventure';
 
 import fbConnection from '../helpers/data/connection';
 
@@ -58,7 +60,11 @@ class App extends React.Component {
               <div className='row'>
                 <Switch>
                   <PublicRoute path='/auth' component={Auth} authed={authed}/>
+
                   <PrivateRoute path='/base' component={Base} authed={authed}/>
+                  <PrivateRoute path='/choose_item' component={ChooseItem} authed={authed}/>
+
+                  <PrivateRoute path='/adventure' component={Adventure} authed={authed}/>
 
                   <Redirect from='*' to='/auth' />
                 </Switch>

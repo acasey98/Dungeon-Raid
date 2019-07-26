@@ -18,8 +18,7 @@ class Base extends React.Component {
     unassgndPts: 10,
   }
 
-  createCharacter = (e) => {
-    e.preventDefault();
+  createCharacter = () => {
     const startingHP = (45 + (this.state.VIT * 5));
     const newChar = {
       uid: firebase.auth().currentUser.uid,
@@ -161,12 +160,14 @@ class Base extends React.Component {
           <button id="WIS_add" type="button" className="btn btn-info" onClick={this.WISsubPnt}>-</button>
         </div>
         <div id="LCK" className="btn-group-vertical" role="group" aria-label="Basic example">
-          <h2>VIT</h2>
+          <h2>LCK</h2>
           <button id="LCK_sub" type="button" className="btn btn-info" onClick={this.LCKaddPnt}>+</button>
           <button id="LCK_num" type="text" className="btn btn-dark" disabled>{this.state.LCK}</button>
           <button id="LCK_add" type="button" className="btn btn-info" onClick={this.LCKsubPnt}>-</button>
         </div>
-        <button id="saveStats" type="button" className="btn btn-danger" onClick={this.createCharacter}>SAVE</button>
+        <Link to={'/choose_item'}>
+          <button id="saveStats" type="button" className="btn btn-danger" onClick={this.createCharacter}>SAVE</button>
+        </Link>
       </div>
     );
   }
