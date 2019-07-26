@@ -1,10 +1,42 @@
 {
-    "ogreFight": {
+    "ogreFight1": {
       "enctrType": "enemy",
       "enemyid": "BOgre",
       "startTxt": "A massive ogre stands before you!",
       "endTxt": "That ogre wasn't a problem at all!",
       "finalEnctr": false,
+      "itemDropid": "HPpot(S)"
+    },
+    "ogreFight2": {
+      "enctrType": "enemy",
+      "enemyid": "BOgre",
+      "startTxt": "A massive ogre stands before you!",
+      "endTxt": "That ogre wasn't a problem at all!",
+      "finalEnctr": false,
+      "itemDropid": "HPpot(S)"
+    },
+    "ogreFight3": {
+      "enctrType": "enemy",
+      "enemyid": "BOgre",
+      "startTxt": "A massive ogre stands before you!",
+      "endTxt": "That ogre wasn't a problem at all!",
+      "finalEnctr": false,
+      "itemDropid": "HPpot(S)"
+    },
+    "ogreFight4": {
+      "enctrType": "enemy",
+      "enemyid": "BOgre",
+      "startTxt": "A massive ogre stands before you!",
+      "endTxt": "That ogre wasn't a problem at all!",
+      "finalEnctr": false,
+      "itemDropid": "HPpot(S)"
+    },
+    "ogreFight5": {
+      "enctrType": "enemy",
+      "enemyid": "BOgre",
+      "startTxt": "A massive ogre stands before you!",
+      "endTxt": "That ogre wasn't a problem at all!",
+      "finalEnctr": true,
       "itemDropid": "HPpot(S)"
     }
 }

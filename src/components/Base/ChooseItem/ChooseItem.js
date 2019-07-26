@@ -6,6 +6,7 @@ import 'firebase/auth';
 
 import Chars from '../../../helpers/data/charData';
 import Items from '../../../helpers/data/itemData';
+import Campgn from '../../../helpers/data/campaignData';
 
 class ChooseItem extends React.Component {
   state = {
@@ -54,6 +55,7 @@ class ChooseItem extends React.Component {
           modifier: '',
         };
         Items.createInvItem(newItem);
+        Campgn.generateCamp(4);
       })
       .catch(err => console.error('cant get characters', err));
   }
