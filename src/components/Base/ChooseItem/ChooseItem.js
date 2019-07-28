@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable consistent-return */
 import React from 'react';
 import {
   Link, BrowserRouter, Route, Redirect, Switch,
@@ -20,32 +22,58 @@ class ChooseItem extends React.Component {
     advPath: '',
     disabled: false,
     saveDisabled: true,
-    charId: '',
   }
 
   componentDidMount() {
-    Items.getSeedItems()
-      .then((items) => {
-        items.filter((x) => {
-          if (x.id === 'Firebomb_') {
-            const item1 = x;
-            this.setState({ item1 });
+    if (this.props.location.state !== undefined) {
+      // const { charId } = this.props.location.state;
+      // console.error(charId);
+      console.error(this.props.location.state.charId);
+      this.setState({ charId: this.props.location.state });
+      console.error(this.state.charId);
+      Campgn.getCamp(this.state.charId)
+        .then((res) => {
+          console.error(res);
+          if (res.length !== 0) {
+            this.setState({ defaultRedirect: true, currCamp: res[0] });
           }
-        });
-        items.filter((x) => {
-          if (x.id === 'RestoRing_') {
-            const item2 = x;
-            this.setState({ item2 });
-          }
-        });
-        items.filter((x) => {
-          if (x.id === 'HPpotS_') {
-            const item3 = x;
-            this.setState({ item3 });
-          }
-        });
-      })
-      .catch(err => console.error('cant get items', err));
+        })
+        .catch(err => console.error('couldnt get cmpgns', err));
+    } else {
+      Items.getSeedItems()
+        .then((items) => {
+          items.filter((x) => {
+            if (x.id === 'Firebomb_') {
+              const item1 = x;
+              this.setState({ item1 });
+            }
+          });
+          items.filter((x) => {
+            if (x.id === 'RestoRing_') {
+              const item2 = x;
+              this.setState({ item2 });
+            }
+          });
+          items.filter((x) => {
+            if (x.id === 'HPpotS_') {
+              const item3 = x;
+              this.setState({ item3 });
+            }
+          });
+        })
+        .catch(err => console.error('cant get items', err));
+    }
+  }
+
+  renderRedirect = () => {
+    if (this.state.defaultRedirect === true) {
+      // console.error(currCamp);
+      const campaign = this.state.currCamp.id;
+      this.setState({ campaign });
+      this.setState({ saveDisabled: false });
+      this.setState({ disabled: true });
+      return <Redirect to={{ pathname: '/adventure', state: { campaign: this.state.currCamp.id, charId: this.state.charId } }}/>;
+    }
   }
 
   saveItem = (e) => {
@@ -54,6 +82,7 @@ class ChooseItem extends React.Component {
     // const itemChrgs = itemB4.toString();
     Chars.getCurrentChar(firebase.auth().currentUser.uid)
       .then((char) => {
+        console.error(char);
         const newItem = {
           charid: char[0].id,
           itemid: itemId,
@@ -64,7 +93,7 @@ class ChooseItem extends React.Component {
         Campgn.generateCamp(3, char[0].id);
         Campgn.getCamp(char[0].id)
           .then((campaigns) => {
-            const campaign = campaigns[0].id;
+            const campaign = campaigns;
             Campgn.updateCamp(campaign, campaigns[0]);
             console.error(campaign);
             this.setState({ campaign });
@@ -117,6 +146,7 @@ class ChooseItem extends React.Component {
           </div>
         </div>
       </div>
+      {this.renderRedirect()}
       <Link to={{ pathname: this.state.advPath, state: { campaign: this.state.campaign, charId: this.state.charId } }}>
         <button className="btn btn-primary" disabled={this.state.saveDisabled}>Click here to continue.</button>
       </Link>
