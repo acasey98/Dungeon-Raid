@@ -1,5 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {
+  Link, BrowserRouter, Route, Redirect, Switch,
+} from 'react-router-dom';
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -13,6 +15,11 @@ class ChooseItem extends React.Component {
     item1: {},
     item2: {},
     item3: {},
+    campaign: '',
+    redirect: false,
+    advPath: '',
+    disabled: false,
+    saveDisabled: true,
   }
 
   componentDidMount() {
@@ -54,8 +61,21 @@ class ChooseItem extends React.Component {
         };
         Items.createInvItem(newItem);
         Campgn.generateCamp(3, char[0].id);
+        Campgn.getCamp(char[0].id)
+          .then((campaigns) => {
+            const campaign = campaigns[0].id;
+            console.error(campaign);
+            this.setState({ campaign });
+            this.setState({ advPath: '/adventure' });
+            this.setState({ saveDisabled: false });
+            this.setState({ disabled: true });
+          })
+          .catch(err => err);
       })
       .catch(err => console.error('cant get characters', err));
+    // if (this.state.redirect === true) {
+    //   (<Redirect to={this.state.advPath} campaign={this.state.campaign}/>);
+    // }
   }
 
   render() {
@@ -71,8 +91,7 @@ class ChooseItem extends React.Component {
               <div className="card-body">
                 <h5 className="card-title">{this.state.item1.name}</h5>
                 <p className="card-text">{this.state.item1.desc}</p>
-                {/* <Link to={'/adventure'}></Link> */}
-                  <button id={item1id} onClick={this.saveItem} className="btn btn-primary">Choose this item</button>
+                  <button id={item1id} onClick={this.saveItem} className="btn btn-primary" disabled={this.state.disabled}>Choose this item</button>
               </div>
             </div>
           </div>
@@ -81,7 +100,7 @@ class ChooseItem extends React.Component {
               <div className="card-body">
                 <h5 className="card-title">{this.state.item2.name}</h5>
                 <p className="card-text">{this.state.item2.desc}</p>
-                <button id={item2id} onClick={this.saveItem} className="btn btn-primary">Choose this item</button>
+                  <button id={item2id} onClick={this.saveItem} className="btn btn-primary" disabled={this.state.disabled}>Choose this item</button>
               </div>
             </div>
           </div>
@@ -90,12 +109,15 @@ class ChooseItem extends React.Component {
               <div className="card-body">
                 <h5 className="card-title">{this.state.item3.name}</h5>
                 <p className="card-text">{this.state.item3.desc}</p>
-                <button id={item3id} onClick={this.saveItem} className="btn btn-primary">Choose this item</button>
-              </div>
+                  <button id={item3id} onClick={this.saveItem} className="btn btn-primary" disabled={this.state.disabled}>Choose this item</button>
             </div>
           </div>
         </div>
       </div>
+      <Link to={{ pathname: this.state.advPath, state: { campaign: this.state.campaign } }}>
+        <button className="btn btn-primary" disabled={this.state.saveDisabled}>Click here to continue.</button>
+      </Link>
+    </div>
     );
   }
 }

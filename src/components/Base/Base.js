@@ -135,6 +135,7 @@ class Base extends React.Component {
   render() {
     return (
       <div className="statBtns">
+        <h2 id="pntsRemain">{this.state.unassgndPts} point(s) left.</h2>
         <div id="VIT" className="btn-group-vertical" role="group" aria-label="Basic example">
           <h2>VIT</h2>
           <button id="VIT_sub" type="button" className="btn btn-info" onClick={this.VITaddPnt}>+</button>
