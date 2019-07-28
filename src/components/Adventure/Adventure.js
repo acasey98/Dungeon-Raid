@@ -65,8 +65,8 @@ class Adventure extends React.Component {
             console.error('invalid campaignPos');
         }
       })
-      .catch(err => err);
-    // console.error(this.state.currEnctr);
+      .catch(err => console.error('error', err));
+    console.error(this.state.currEnctr);
     // this.LoadEncounter(this.state.currEnctr);
   }
 

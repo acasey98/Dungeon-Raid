@@ -23,6 +23,7 @@ class ChooseItem extends React.Component {
     disabled: false,
     saveDisabled: true,
     hiddenModal: 'd-none',
+    characterId: '',
   }
 
   displayLoading = () => {
@@ -33,11 +34,13 @@ class ChooseItem extends React.Component {
 
   componentDidMount() {
     if (this.props.location.state !== undefined) {
-      // const { charId } = this.props.location.state;
-      // console.error(charId);
-      console.error(this.props.location.state.charId);
-      this.setState({ charId: this.props.location.state });
-      console.error(this.state.charId);
+      const { charId } = this.props.location.state;
+      console.error(charId);
+      const B = 'B';
+      const idCombo = B.concat(charId);
+      console.error(idCombo);
+      this.setState({ characterId: 'dogshit' });
+      console.error(this.state.characterId);
       Campgn.getCamp(this.state.charId)
         .then((res) => {
           console.error(res);
@@ -87,7 +90,6 @@ campGet = (charId) => {
   this.setState({ advPath: '/adventure' });
   Campgn.getCamp(charId)
     .then((campaigns) => {
-      console.error(campaigns);
       // Campgn.updateCamp(campaigns[0].id, campaigns[0]);
       this.setState({ campaign: campaigns[0].id });
       this.setState({ saveDisabled: false });
@@ -103,7 +105,6 @@ campGet = (charId) => {
     // const itemChrgs = itemB4.toString();
     Chars.getCurrentChar(firebase.auth().currentUser.uid)
       .then((char) => {
-        console.error(char);
         this.setState({ charId: char[0].id });
         const newItem = {
           charid: char[0].id,
@@ -123,9 +124,9 @@ campGet = (charId) => {
     setTimeout(() => {
       this.campGet(this.state.charId);
     }, 3000);
-    // if (this.state.redirect === true) {
-    //   (<Redirect to={this.state.advPath} campaign={this.state.campaign}/>);
-    // }
+    if (this.state.redirect === true) {
+      return (<Redirect to={this.state.advPath} campaign={this.state.campaign}/>);
+    }
   }
 
   render() {
