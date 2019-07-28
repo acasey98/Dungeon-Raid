@@ -1,8 +1,29 @@
 {
-    "BOgre": {
-      "name": "Big Stupid Ogre",
+    "BOgre1": {
+      "id": "BOgre1",
+      "name": "Big Stupid Ogre1",
+      "enemyHP": 40,
+      "enemyATK": 10,
+      "atkTxt": "The ogre attacks!",
+      "evdTxt": "You evaded the ogre's attack!",
+      "dmgTxt": "The ogre howls in pain!",
+      "dthTxt": "The ogre falls over dead."
+    },
+    "BOgre2": {
+      "id": "BOgre2",
+      "name": "Big Stupid Ogre2",
       "enemyHP": 60,
       "enemyATK": 20,
+      "atkTxt": "The ogre attacks!",
+      "evdTxt": "You evaded the ogre's attack!",
+      "dmgTxt": "The ogre howls in pain!",
+      "dthTxt": "The ogre falls over dead."
+    },
+    "BOgre3": {
+      "id": "BOgre3",
+      "name": "Big Stupid Ogre3",
+      "enemyHP": 80,
+      "enemyATK": 30,
       "atkTxt": "The ogre attacks!",
       "evdTxt": "You evaded the ogre's attack!",
       "dmgTxt": "The ogre howls in pain!",

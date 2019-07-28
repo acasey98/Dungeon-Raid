@@ -20,6 +20,7 @@ class ChooseItem extends React.Component {
     advPath: '',
     disabled: false,
     saveDisabled: true,
+    charId: '',
   }
 
   componentDidMount() {
@@ -64,11 +65,13 @@ class ChooseItem extends React.Component {
         Campgn.getCamp(char[0].id)
           .then((campaigns) => {
             const campaign = campaigns[0].id;
+            Campgn.updateCamp(campaign, campaigns[0]);
             console.error(campaign);
             this.setState({ campaign });
             this.setState({ advPath: '/adventure' });
             this.setState({ saveDisabled: false });
             this.setState({ disabled: true });
+            this.setState({ charId: char[0].id });
           })
           .catch(err => err);
       })
@@ -114,7 +117,7 @@ class ChooseItem extends React.Component {
           </div>
         </div>
       </div>
-      <Link to={{ pathname: this.state.advPath, state: { campaign: this.state.campaign } }}>
+      <Link to={{ pathname: this.state.advPath, state: { campaign: this.state.campaign, charId: this.state.charId } }}>
         <button className="btn btn-primary" disabled={this.state.saveDisabled}>Click here to continue.</button>
       </Link>
     </div>

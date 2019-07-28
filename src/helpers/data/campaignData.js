@@ -78,6 +78,40 @@ const getCamp = charId => new Promise((resolve, reject) => {
     .catch(err => reject(err));
 });
 
+const getCampById = campId => new Promise((resolve, reject) => {
+  axios
+    .get(`${baseUrl}/campaigns.json?orderBy="id"&equalTo="${campId}"`)
+    .then((res) => {
+      const campaigns = [];
+      if (res.data !== null) {
+        Object.keys(res.data).forEach((fbKey) => {
+          res.data[fbKey].id = fbKey;
+          campaigns.push(res.data[fbKey]);
+        });
+      }
+      resolve(campaigns);
+    })
+    .catch(err => reject(err));
+});
+
+const updateCamp = (campId, newCamp) => axios.put(`${baseUrl}/campaigns/${campId}.json`, newCamp);
+
+const getEnemyByName = enemyId => new Promise((resolve, reject) => {
+  axios
+    .get(`${baseUrl}/enemies.json?orderBy="id"&equalTo="${enemyId}"`)
+    .then((res) => {
+      const enemy = [];
+      if (res.data !== null) {
+        Object.keys(res.data).forEach((fbKey) => {
+          res.data[fbKey].id = fbKey;
+          enemy.push(res.data[fbKey]);
+        });
+      }
+      resolve(enemy);
+    })
+    .catch(err => reject(err));
+});
+
 export default {
-  generateCamp, getCamp,
+  generateCamp, getCamp, updateCamp, getCampById, getEncounters, getEnemyByName,
 };
