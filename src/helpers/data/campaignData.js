@@ -63,7 +63,7 @@ const getEncounters = () => new Promise((resolve, reject) => {
     .catch(err => reject(err, 'cannot get encounters'));
 });
 
-const generateCamp = (campLength, charId) => {
+const generateCamp = (campLength, charId) => new Promise((resolve, reject) => {
   getEncounters()
     .then((encs) => {
       const normEncs = encs.filter(x => x.finalEnctr === false);
@@ -93,9 +93,10 @@ const generateCamp = (campLength, charId) => {
       const uidPlusCid = charId.concat(firebase.auth().currentUser.uid);
       fullCamp.tempId = uidPlusCid;
       axios.post(`${baseUrl}/campaigns.json`, fullCamp);
+      resolve();
     })
-    .catch(err => console.error('campaign gen error', err));
-};
+    .catch(err => reject(err, 'campaign gen error'));
+});
 
 const getCamp = charid => new Promise((resolve, reject) => {
   axios

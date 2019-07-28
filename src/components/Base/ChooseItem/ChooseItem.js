@@ -22,7 +22,14 @@ class ChooseItem extends React.Component {
     advPath: '',
     disabled: false,
     saveDisabled: true,
+    hiddenModal: 'd-none',
   }
+
+  displayLoading = () => {
+    return <div className={this.state.hiddenModal}>
+              <h3>Loading...</h3>
+           </div>;
+  };
 
   componentDidMount() {
     if (this.props.location.state !== undefined) {
@@ -76,6 +83,20 @@ class ChooseItem extends React.Component {
     }
   }
 
+campGet = (charId) => {
+  this.setState({ advPath: '/adventure' });
+  Campgn.getCamp(charId)
+    .then((campaigns) => {
+      console.error(campaigns);
+      // Campgn.updateCamp(campaigns[0].id, campaigns[0]);
+      this.setState({ campaign: campaigns[0].id });
+      this.setState({ saveDisabled: false });
+      this.setState({ disabled: true });
+      this.setState({ hiddenModal: 'd-none' });
+    })
+    .catch(err => err);
+}
+
   saveItem = (e) => {
     const itemId = e.target.id.split('_')[0];
     const itemChrgs = e.target.id.split('_')[1];
@@ -83,28 +104,25 @@ class ChooseItem extends React.Component {
     Chars.getCurrentChar(firebase.auth().currentUser.uid)
       .then((char) => {
         console.error(char);
+        this.setState({ charId: char[0].id });
         const newItem = {
           charid: char[0].id,
           itemid: itemId,
           currCharges: itemChrgs,
           modifier: '',
         };
+
         Items.createInvItem(newItem);
-        Campgn.generateCamp(3, char[0].id);
-        Campgn.getCamp(char[0].id)
-          .then((campaigns) => {
-            const campaign = campaigns;
-            Campgn.updateCamp(campaign, campaigns[0]);
-            console.error(campaign);
-            this.setState({ campaign });
-            this.setState({ advPath: '/adventure' });
-            this.setState({ saveDisabled: false });
-            this.setState({ disabled: true });
-            this.setState({ charId: char[0].id });
+        Campgn.generateCamp(3, char[0].id)
+          .then(() => {
           })
           .catch(err => err);
       })
       .catch(err => console.error('cant get characters', err));
+    this.setState({ hiddenModal: 'd-block' });
+    setTimeout(() => {
+      this.campGet(this.state.charId);
+    }, 3000);
     // if (this.state.redirect === true) {
     //   (<Redirect to={this.state.advPath} campaign={this.state.campaign}/>);
     // }
@@ -123,7 +141,7 @@ class ChooseItem extends React.Component {
               <div className="card-body">
                 <h5 className="card-title">{this.state.item1.name}</h5>
                 <p className="card-text">{this.state.item1.desc}</p>
-                  <button id={item1id} onClick={this.saveItem} className="btn btn-primary" disabled={this.state.disabled}>Choose this item</button>
+                  <button id={item1id} onClick={this.saveItem} className="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" disabled={this.state.disabled}>Choose this item</button>
               </div>
             </div>
           </div>
@@ -132,7 +150,7 @@ class ChooseItem extends React.Component {
               <div className="card-body">
                 <h5 className="card-title">{this.state.item2.name}</h5>
                 <p className="card-text">{this.state.item2.desc}</p>
-                  <button id={item2id} onClick={this.saveItem} className="btn btn-primary" disabled={this.state.disabled}>Choose this item</button>
+                  <button id={item2id} onClick={this.saveItem} className="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" disabled={this.state.disabled}>Choose this item</button>
               </div>
             </div>
           </div>
@@ -141,7 +159,7 @@ class ChooseItem extends React.Component {
               <div className="card-body">
                 <h5 className="card-title">{this.state.item3.name}</h5>
                 <p className="card-text">{this.state.item3.desc}</p>
-                  <button id={item3id} onClick={this.saveItem} className="btn btn-primary" disabled={this.state.disabled}>Choose this item</button>
+                  <button id={item3id} onClick={this.saveItem} className="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" disabled={this.state.disabled}>Choose this item</button>
             </div>
           </div>
         </div>
@@ -150,6 +168,7 @@ class ChooseItem extends React.Component {
       <Link to={{ pathname: this.state.advPath, state: { campaign: this.state.campaign, charId: this.state.charId } }}>
         <button className="btn btn-primary" disabled={this.state.saveDisabled}>Click here to continue.</button>
       </Link>
+      {this.displayLoading()}
     </div>
     );
   }
