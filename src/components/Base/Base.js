@@ -1,10 +1,14 @@
+/* eslint-disable consistent-return */
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {
+  Link, Redirect,
+} from 'react-router-dom';
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
 import data from '../../helpers/data/charData';
+// import camp from '../../helpers/data/campaignData';
 
 import './Base.scss';
 
@@ -17,6 +21,22 @@ class Base extends React.Component {
     LCK: 1,
     unassgndPts: 10,
   }
+
+  // componentDidMount() {
+  //   data.getCurrentChar(firebase.auth().currentUser.uid)
+  //     .then((res) => {
+  //       if (res.length !== 0) {
+  //         this.setState({ redirect: true, charIdOp: res[0].id });
+  //       }
+  //     })
+  //     .catch(err => console.error('no characters', err));
+  // }
+
+  renderRedirect = () => {
+    if (this.state.redirect === true) {
+      return <Redirect to={{ pathname: '/choose_item', state: { charId: this.state.charIdOp } }} />;
+    }
+  };
 
   createCharacter = () => {
     const startingHP = (45 + (this.state.VIT * 5));
@@ -135,6 +155,8 @@ class Base extends React.Component {
   render() {
     return (
       <div className="statBtns">
+        {this.renderRedirect()}
+        <h2 id="pntsRemain">{this.state.unassgndPts} point(s) left.</h2>
         <div id="VIT" className="btn-group-vertical" role="group" aria-label="Basic example">
           <h2>VIT</h2>
           <button id="VIT_sub" type="button" className="btn btn-info" onClick={this.VITaddPnt}>+</button>
