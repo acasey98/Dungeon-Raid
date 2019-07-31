@@ -35,17 +35,9 @@ const normIds = [];
 
 const getCampById = campId => new Promise((resolve, reject) => {
   axios
-    .get(`${baseUrl}/campaigns.json?orderBy="id"&equalTo="${campId}"`)
+    .get(`${baseUrl}/campaigns/${campId}.json`)
     .then((res) => {
-      const campaigns = [];
-      if (res.data !== null) {
-        Object.keys(res.data).forEach((fbKey) => {
-          res.data[fbKey].id = fbKey;
-          campaigns.push(res.data[fbKey]);
-        });
-      }
-      console.error(campaigns);
-      resolve(campaigns);
+      resolve(res.data);
     })
     .catch(err => reject(err));
 });
@@ -109,7 +101,6 @@ const getCamp = charid => new Promise((resolve, reject) => {
           campaigns.push(res.data[fbKey]);
         });
       }
-      console.error(campaigns);
       resolve(campaigns);
     })
     .catch(err => reject(err));
@@ -117,22 +108,18 @@ const getCamp = charid => new Promise((resolve, reject) => {
 
 const updateCamp = (campId, newCamp) => axios.put(`${baseUrl}/campaigns/${campId}.json`, newCamp);
 
-const getEnemyByName = enemyId => new Promise((resolve, reject) => {
+const getEnemyById = enemyId => new Promise((resolve, reject) => {
   axios
-    .get(`${baseUrl}/enemies.json?orderBy="id"&equalTo="${enemyId}"`)
-    .then((res) => {
-      const enemy = [];
-      if (res.data !== null) {
-        Object.keys(res.data).forEach((fbKey) => {
-          res.data[fbKey].id = fbKey;
-          enemy.push(res.data[fbKey]);
-        });
+    .get(`${baseUrl}/enemies/${enemyId}.json`)
+    .then((enemy) => {
+      if (enemy.data === null) {
+        console.error('unsuccessfully indexing enemy properties');
       }
-      resolve(enemy);
+      resolve(enemy.data);
     })
     .catch(err => reject(err));
 });
 
 export default {
-  generateCamp, getCamp, updateCamp, getCampById, getEncounters, getEnemyByName,
+  generateCamp, getCamp, updateCamp, getCampById, getEncounters, getEnemyById,
 };

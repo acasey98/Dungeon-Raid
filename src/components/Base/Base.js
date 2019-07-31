@@ -22,15 +22,15 @@ class Base extends React.Component {
     unassgndPts: 10,
   }
 
-  componentDidMount() {
-    data.getCurrentChar(firebase.auth().currentUser.uid)
-      .then((res) => {
-        if (res.length !== 0) {
-          this.setState({ redirect: true, charIdOp: res[0].id });
-        }
-      })
-      .catch(err => console.error('no characters', err));
-  }
+  // componentDidMount() {
+  //   data.getCurrentChar(firebase.auth().currentUser.uid)
+  //     .then((res) => {
+  //       if (res.length !== 0) {
+  //         this.setState({ redirect: true, charIdOp: res[0].id });
+  //       }
+  //     })
+  //     .catch(err => console.error('no characters', err));
+  // }
 
   renderRedirect = () => {
     if (this.state.redirect === true) {

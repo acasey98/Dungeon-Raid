@@ -33,46 +33,46 @@ class ChooseItem extends React.Component {
   };
 
   componentDidMount() {
-    if (this.props.location.state !== undefined) {
-      const { charId } = this.props.location.state;
-      console.error(charId);
-      const B = 'B';
-      const idCombo = B.concat(charId);
-      console.error(idCombo);
-      this.setState({ characterId: 'dogshit' });
-      console.error(this.state.characterId);
-      Campgn.getCamp(this.state.charId)
-        .then((res) => {
-          console.error(res);
-          if (res.length !== 0) {
-            this.setState({ defaultRedirect: true, currCamp: res[0] });
+    // if (this.props.location.state !== undefined) {
+    //   const { charId } = this.props.location.state;
+    //   console.error(charId);
+    //   const B = 'B';
+    //   const idCombo = B.concat(charId);
+    //   console.error(idCombo);
+    //   this.setState({ characterId: 'dogshit' });
+    //   console.error(this.state.characterId);
+    //   Campgn.getCamp(this.state.charId)
+    //     .then((res) => {
+    //       console.error(res);
+    //       if (res.length !== 0) {
+    //         this.setState({ defaultRedirect: true, currCamp: res[0] });
+    //       }
+    //     })
+    //     .catch(err => console.error('couldnt get cmpgns', err));
+    // } else {
+    Items.getSeedItems()
+      .then((items) => {
+        items.filter((x) => {
+          if (x.id === 'Firebomb_') {
+            const item1 = x;
+            this.setState({ item1 });
           }
-        })
-        .catch(err => console.error('couldnt get cmpgns', err));
-    } else {
-      Items.getSeedItems()
-        .then((items) => {
-          items.filter((x) => {
-            if (x.id === 'Firebomb_') {
-              const item1 = x;
-              this.setState({ item1 });
-            }
-          });
-          items.filter((x) => {
-            if (x.id === 'RestoRing_') {
-              const item2 = x;
-              this.setState({ item2 });
-            }
-          });
-          items.filter((x) => {
-            if (x.id === 'HPpotS_') {
-              const item3 = x;
-              this.setState({ item3 });
-            }
-          });
-        })
-        .catch(err => console.error('cant get items', err));
-    }
+        });
+        items.filter((x) => {
+          if (x.id === 'RestoRing_') {
+            const item2 = x;
+            this.setState({ item2 });
+          }
+        });
+        items.filter((x) => {
+          if (x.id === 'HPpotS_') {
+            const item3 = x;
+            this.setState({ item3 });
+          }
+        });
+      })
+      .catch(err => console.error('cant get items', err));
+    // }
   }
 
   renderRedirect = () => {
@@ -123,16 +123,16 @@ campGet = (charId) => {
     this.setState({ hiddenModal: 'd-block' });
     setTimeout(() => {
       this.campGet(this.state.charId);
-    }, 3000);
+    }, 2000);
     if (this.state.redirect === true) {
       return (<Redirect to={this.state.advPath} campaign={this.state.campaign}/>);
     }
   }
 
   render() {
-    const item1id = this.state.item1.id + this.state.item1.maxCharges;
-    const item2id = this.state.item2.id + this.state.item2.maxCharges;
-    const item3id = this.state.item3.id + this.state.item3.maxCharges;
+    const item1id = `${this.state.item1.id} ${this.state.item1.maxCharges}`;
+    const item2id = `${this.state.item2.id} ${this.state.item2.maxCharges}`;
+    const item3id = `${this.state.item3.id} ${this.state.item3.maxCharges}`;
 
     return (
       <div className="ChooseItem">

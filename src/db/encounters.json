@@ -1,7 +1,7 @@
 {
     "ogreFight1": {
       "enctrType": "enemy",
-      "enemyid": "BOgre",
+      "enemyid": "BOgre1",
       "startTxt": "A massive ogre stands before you!",
       "endTxt": "That ogre wasn't a problem at all!",
       "finalEnctr": false,
@@ -9,7 +9,7 @@
     },
     "ogreFight2": {
       "enctrType": "enemy",
-      "enemyid": "BOgre",
+      "enemyid": "BOgre2",
       "startTxt": "A massive ogre stands before you!",
       "endTxt": "That ogre wasn't a problem at all!",
       "finalEnctr": false,
@@ -17,7 +17,7 @@
     },
     "ogreFight3": {
       "enctrType": "enemy",
-      "enemyid": "BOgre",
+      "enemyid": "BOgre3",
       "startTxt": "A massive ogre stands before you!",
       "endTxt": "That ogre wasn't a problem at all!",
       "finalEnctr": false,
@@ -25,7 +25,7 @@
     },
     "ogreFight4": {
       "enctrType": "enemy",
-      "enemyid": "BOgre",
+      "enemyid": "BOgre1",
       "startTxt": "A massive ogre stands before you!",
       "endTxt": "That ogre wasn't a problem at all!",
       "finalEnctr": false,
@@ -33,7 +33,7 @@
     },
     "ogreFight5": {
       "enctrType": "enemy",
-      "enemyid": "BOgre",
+      "enemyid": "BOgre2",
       "startTxt": "A massive ogre stands before you!",
       "endTxt": "That ogre wasn't a problem at all!",
       "finalEnctr": true,
@@ -41,7 +41,7 @@
     },
     "ogreFight6": {
       "enctrType": "enemy",
-      "enemyid": "BOgre",
+      "enemyid": "BOgre3",
       "startTxt": "A massive ogre stands before you!",
       "endTxt": "That ogre wasn't a problem at all!",
       "finalEnctr": false,
@@ -49,7 +49,7 @@
     },
     "ogreFight7": {
       "enctrType": "enemy",
-      "enemyid": "BOgre",
+      "enemyid": "BOgre1",
       "startTxt": "A massive ogre stands before you!",
       "endTxt": "That ogre wasn't a problem at all!",
       "finalEnctr": false,
