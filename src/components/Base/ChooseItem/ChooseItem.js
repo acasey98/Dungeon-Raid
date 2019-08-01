@@ -24,6 +24,7 @@ class ChooseItem extends React.Component {
     saveDisabled: true,
     hiddenModal: 'd-none',
     characterId: '',
+    defaultRedirect: false,
   }
 
   displayLoading = () => {
@@ -50,6 +51,9 @@ class ChooseItem extends React.Component {
     //     })
     //     .catch(err => console.error('couldnt get cmpgns', err));
     // } else {
+    if (this.props.location.state !== undefined) {
+      this.setState({ defaultRedirect: true });
+    }
     Items.getSeedItems()
       .then((items) => {
         items.filter((x) => {
@@ -78,11 +82,11 @@ class ChooseItem extends React.Component {
   renderRedirect = () => {
     if (this.state.defaultRedirect === true) {
       // console.error(currCamp);
-      const campaign = this.state.currCamp.id;
+      const campaign = this.props.location.state.currCampaign;
       this.setState({ campaign });
       this.setState({ saveDisabled: false });
       this.setState({ disabled: true });
-      return <Redirect to={{ pathname: '/adventure', state: { campaign: this.state.currCamp.id, charId: this.state.charId } }}/>;
+      return <Redirect to={{ pathname: '/adventure', state: { campaign: this.state.campaign, charId: this.state.charId } }}/>;
     }
   }
 

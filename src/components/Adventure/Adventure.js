@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -21,6 +21,12 @@ class Adventure extends React.Component {
     inv: [],
     seedItems: [],
     currCharHP: 0,
+    enemyHP: 0,
+    text: '',
+    item1Ch: 0,
+    item2Ch: 0,
+    item3Ch: 0,
+    renderNext: false,
   }
 
   LoadEncounter = (currEnctr) => {
@@ -39,8 +45,10 @@ class Adventure extends React.Component {
         .then((enemyObj) => {
           this.setState({
             enemyProps: enemyObj,
+            enemyHP: enemyObj.enemyHP,
           });
           console.error(this.state.enemyProps, 'enemy properties');
+          this.printText(this.state.enemyProps.name, ' appears!');
         })
         .catch(err => console.error('couldnt get enemies', err));
       Items.getSeedItems()
@@ -73,6 +81,14 @@ class Adventure extends React.Component {
     }
   }
 
+  printText = (output, variable) => {
+    if (variable !== undefined) {
+      this.setState({ text: this.state.text + output + variable });
+    } else if (output !== undefined) {
+      this.setState({ text: this.state.text + output });
+    }
+  }
+
   printBtns = (lgth) => {
     if (lgth === 1) {
       return <button id={this.state.inv[0].id} type="button" className="btn btn-primary" onClick={ () => this.useItem(0)}>{this.state.inv[0].itemid}</button>;
@@ -94,15 +110,48 @@ class Adventure extends React.Component {
     }
   }
 
+  nextEncounter = () => {
+    const item1 = this.state.inv[0];
+    item1.currCharges = this.state.item1Ch;
+    Items.updateItems(item1, item1.id);
+    if (this.state.inv[1] !== undefined) {
+      const item2 = this.state.inv[1];
+      item2.currCharges = this.state.item2Ch;
+      Items.updateItems(item2, item2.id);
+      if (this.state.inv[2] !== undefined) {
+        const item3 = this.state.inv[2];
+        item3.currCharges = this.state.item3Ch;
+        Items.updateItems(item3, item3.id);
+      }
+    }
+    const newCamp = this.state.campObj;
+    newCamp.campaignPos = newCamp.campaignPos + 1;
+    this.setState({ campObj: newCamp});
+    const { char } = this.state;
+    char.playerHP = this.state.currCharHP;
+    CharData.updateChar(char.id, char);
+    console.error(this.state.campObj);
+    Campgn.updateCamp(this.state.campaign, this.state.campObj);
+    this.setState({ renderNext: true });
+  }
+
+  reloadEncounter = () => {
+    if (this.state.renderNext === true) {
+      return <Link to={{ pathname: '/choose_item', state: { redirect: true, currCampaign: this.state.campaign } }}>
+                <button type="button" className="btn btn-secondary">Proceed to the Next fight!</button>
+              </Link>;
+    }
+  }
+
   printDOM = () => {
     return <div>
       <div className="card text-left scroll">
         <div className="card-body">
-          <p className="card-text">With supporting text below as a natural lead-in to aWith supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting texadditional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting texadditional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting tex</p>
+          <p className="card-text">{this.state.text}</p>
         </div>
       </div>
       <div className="card text-left scroll">
-        <button type="button" className="btn btn-secondary" onClick={this.charAtk}>Attack!</button>
+        <button type="button" className="btn btn-secondary" onClick={ () => this.charAtk() }>Attack!</button>
         <button type="button" className="btn btn-secondary" disabled>...</button>
         <button type="button" className="btn btn-secondary" disabled>...</button>
 
@@ -113,39 +162,79 @@ class Adventure extends React.Component {
   }
 
   enemyAtk = () => {
-    const atkPwr = this.state.enemyProps.enemyAtk;
+    const atkPwr = this.state.enemyProps.enemyATK;
+    console.error('enemy atkpwr:', atkPwr);
     const playerHP = this.state.currCharHP;
+    console.error('player hp:', playerHP);
     const newHP = playerHP - atkPwr;
+    console.error('player hp after dmg:', newHP);
     this.setState({ currCharHP: newHP });
+    this.printText(this.state.enemyProps.atkTxt);
+    this.printText(' your HP:', this.state.currCharHP);
+    if (newHP <= 0) {
+      this.printText(' you lose!');
+    }
+  }
+
+  charAtk = () => {
+    const atkPwr = (8 + (this.state.char.STR * 2));
+    const currHP = this.state.enemyHP;
+    this.setState({ enemyHP: currHP - atkPwr });
+    setTimeout(() => {
+      this.printText(this.state.enemyProps.dmgTxt);
+      this.printText(' Enemy HP:', this.state.enemyHP);
+      if (this.state.enemyHP <= 0) {
+        this.printText(this.state.enemyProps.dthTxt);
+        this.nextEncounter();
+      } else {
+        setTimeout(() => {
+          this.enemyAtk();
+        }, 1500);
+      }
+    }, 1500);
   }
 
   useItem = (invIndex) => {
     const itemId = this.state.inv[invIndex].itemid;
+    const newItem = this.state.inv[invIndex];
+    if (invIndex === 0) {
+      this.setState({ item1Ch: newItem.currCharges - 1 });
+    } else if (invIndex === 1) {
+      this.setState({ item2Ch: newItem.currCharges - 1 });
+    } else if (invIndex === 2) {
+      this.setState({ item3Ch: newItem.currCharges - 1 });
+    }
     console.error(itemId);
     const itemData = this.state.seedItems;
     console.error(itemData);
     const currItem = itemData.filter(x => x.id.split('_')[0] === itemId);
     console.error(currItem);
-    const currEnemyHP = this.state.enemyProps.enemyHP;
-    switch (currItem[0].id) {
-      case 'Firebomb_':
-        this.setState({ enemyHP: currEnemyHP - 50 });
-        console.error('the firebomb is thrown! EnemyHP:', this.state.enemyHP);
-        break;
-      case 'HPpotS_':
-        if ((this.state.currCharHP + 80) > (45 + (this.state.char.VIT * 5))) {
-          this.setState({ currCharHP: (45 + (this.state.char.VIT * 5)) });
-        } else {
-          this.setState({ currCharHP: this.state.currCharHP + 80 });
-        }
+    setTimeout(() => {
+      switch (currItem[0].id) {
+        case 'Firebomb_':
+          this.setState({ enemyHP: this.state.enemyHP - 50 });
+          this.printText(' the firebomb is thrown! EnemyHP:', this.state.enemyHP);
+          break;
+        case 'HPpotS_':
+          if ((this.state.currCharHP + 80) > (45 + (this.state.char.VIT * 5))) {
+            this.setState({ currCharHP: (45 + (this.state.char.VIT * 5)) });
+          } else {
+            this.setState({ currCharHP: this.state.currCharHP + 80 });
+          }
+          this.printText(' healed up to', this.state.currCharHP);
+          break;
+        default:
+          this.printText(' that item cannot be used!');
+      }
+      if (this.state.enemyHP <= 0) {
+        this.printText(' the enemy has been slain!');
+        this.nextEncounter();
+      } else {
         setTimeout(() => {
-          console.error('healed up to', this.state.currCharHP);
+          this.enemyAtk();
         }, 1500);
-        break;
-      default:
-        console.error('that item cannot be used!');
-    }
-    this.enemyAtk();
+      }
+    }, 1500);
   }
 
   componentDidMount() {
@@ -199,6 +288,7 @@ class Adventure extends React.Component {
     return (
       <div className="adventureClass">
         { this.printDOM() }
+        { this.reloadEncounter() }
     </div>
     );
   }

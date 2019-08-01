@@ -32,8 +32,17 @@ const getInvItems = () => new Promise((resolve, reject) => {
     .catch(err => reject(err));
 });
 
+const updateItems = (updatedItem, itemId) => {
+  if (updatedItem.currCharges <= 0) {
+    axios.delete(`${baseUrl}/invItems/${itemId}.json`);
+  } else {
+    axios.put(`${baseUrl}/invItems/${itemId}.json`, updatedItem);
+  }
+};
+
 export default {
   getSeedItems,
   createInvItem,
   getInvItems,
+  updateItems,
 };
