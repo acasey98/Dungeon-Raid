@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -23,6 +23,10 @@ class Adventure extends React.Component {
     currCharHP: 0,
     enemyHP: 0,
     text: '',
+    item1Ch: 0,
+    item2Ch: 0,
+    item3Ch: 0,
+    renderNext: false,
   }
 
   LoadEncounter = (currEnctr) => {
@@ -44,6 +48,7 @@ class Adventure extends React.Component {
             enemyHP: enemyObj.enemyHP,
           });
           console.error(this.state.enemyProps, 'enemy properties');
+          this.printText(this.state.enemyProps.name, ' appears!');
         })
         .catch(err => console.error('couldnt get enemies', err));
       Items.getSeedItems()
@@ -105,6 +110,39 @@ class Adventure extends React.Component {
     }
   }
 
+  nextEncounter = () => {
+    const item1 = this.state.inv[0];
+    item1.currCharges = this.state.item1Ch;
+    Items.updateItems(item1, item1.id);
+    if (this.state.inv[1] !== undefined) {
+      const item2 = this.state.inv[1];
+      item2.currCharges = this.state.item2Ch;
+      Items.updateItems(item2, item2.id);
+      if (this.state.inv[2] !== undefined) {
+        const item3 = this.state.inv[2];
+        item3.currCharges = this.state.item3Ch;
+        Items.updateItems(item3, item3.id);
+      }
+    }
+    const newCamp = this.state.campObj;
+    newCamp.campaignPos = newCamp.campaignPos + 1;
+    this.setState({ campObj: newCamp});
+    const { char } = this.state;
+    char.playerHP = this.state.currCharHP;
+    CharData.updateChar(char.id, char);
+    console.error(this.state.campObj);
+    Campgn.updateCamp(this.state.campaign, this.state.campObj);
+    this.setState({ renderNext: true });
+  }
+
+  reloadEncounter = () => {
+    if (this.state.renderNext === true) {
+      return <Link to={{ pathname: '/choose_item', state: { redirect: true, currCampaign: this.state.campaign } }}>
+                <button type="button" className="btn btn-secondary">Proceed to the Next fight!</button>
+              </Link>;
+    }
+  }
+
   printDOM = () => {
     return <div>
       <div className="card text-left scroll">
@@ -131,14 +169,11 @@ class Adventure extends React.Component {
     const newHP = playerHP - atkPwr;
     console.error('player hp after dmg:', newHP);
     this.setState({ currCharHP: newHP });
+    this.printText(this.state.enemyProps.atkTxt);
     this.printText(' your HP:', this.state.currCharHP);
     if (newHP <= 0) {
       this.printText(' you lose!');
     }
-  }
-
-  nextEncounter = () => {
-
   }
 
   charAtk = () => {
@@ -146,9 +181,10 @@ class Adventure extends React.Component {
     const currHP = this.state.enemyHP;
     this.setState({ enemyHP: currHP - atkPwr });
     setTimeout(() => {
+      this.printText(this.state.enemyProps.dmgTxt);
       this.printText(' Enemy HP:', this.state.enemyHP);
       if (this.state.enemyHP <= 0) {
-        this.printText(' your enemy has been slain!');
+        this.printText(this.state.enemyProps.dthTxt);
         this.nextEncounter();
       } else {
         setTimeout(() => {
@@ -160,6 +196,14 @@ class Adventure extends React.Component {
 
   useItem = (invIndex) => {
     const itemId = this.state.inv[invIndex].itemid;
+    const newItem = this.state.inv[invIndex];
+    if (invIndex === 0) {
+      this.setState({ item1Ch: newItem.currCharges - 1 });
+    } else if (invIndex === 1) {
+      this.setState({ item2Ch: newItem.currCharges - 1 });
+    } else if (invIndex === 2) {
+      this.setState({ item3Ch: newItem.currCharges - 1 });
+    }
     console.error(itemId);
     const itemData = this.state.seedItems;
     console.error(itemData);
@@ -244,6 +288,7 @@ class Adventure extends React.Component {
     return (
       <div className="adventureClass">
         { this.printDOM() }
+        { this.reloadEncounter() }
     </div>
     );
   }

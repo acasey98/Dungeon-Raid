@@ -21,4 +21,6 @@ const getCurrentChar = uid => new Promise((resolve, reject) => {
     .catch(err => reject(err));
 });
 
-export default { postCharacter, getCurrentChar };
+const updateChar = (charId, updatedChar) => axios.put(`${baseUrl}/characters/${charId}.json`, updatedChar);
+
+export default { postCharacter, getCurrentChar, updateChar };
