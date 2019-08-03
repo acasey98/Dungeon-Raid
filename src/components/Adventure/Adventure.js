@@ -32,7 +32,7 @@ class Adventure extends React.Component {
   LoadEncounter = (currEnctr) => {
     Campgn.getEncounters()
       .then((enctrs) => {
-        console.error(enctrs, 'got encounters');
+        console.error(currEnctr, 'got encounters');
         const currentEnctrObj = enctrs.filter(x => x.id === currEnctr);
         console.error(currentEnctrObj, 'encounter object filtered');
         this.setState({ encounter: currentEnctrObj[0] });
@@ -48,7 +48,7 @@ class Adventure extends React.Component {
             enemyHP: enemyObj.enemyHP,
           });
           console.error(this.state.enemyProps, 'enemy properties');
-          this.printText(this.state.enemyProps.name, ' appears!');
+          this.printText(this.state.enemyProps.name, ' appears! ');
         })
         .catch(err => console.error('couldnt get enemies', err));
       Items.getSeedItems()
@@ -58,12 +58,22 @@ class Adventure extends React.Component {
         .catch(err => err);
       Items.getInvItems()
         .then((invItems) => {
-          console.error(invItems[0].charid, 'inv item 1 charid');
-          console.error(invItems[1].charid, 'inv item 2 charid');
-          console.error(this.state.char.id, 'current character');
-          const charInventory = invItems.filter(x => x.charid === this.state.char.id);
-          console.error(charInventory, 'character inventory');
-          this.setState({ inv: charInventory });
+          if (invItems.length > 0) {
+            console.error(invItems[0].charid, 'inv item 1 charid');
+            console.error(this.state.char.id, 'current character');
+            const charInventory = invItems.filter(x => x.charid === this.state.char.id);
+            console.error(charInventory, 'character inventory');
+            this.setState({ inv: charInventory });
+            if (this.state.inv[0] !== undefined) {
+              this.setState({ item1Ch: this.state.inv[0].currCharges });
+              if (this.state.inv[1] !== undefined) {
+                this.setState({ item2Ch: this.state.inv[1].currCharges });
+                if (this.state.inv[2] !== undefined) {
+                  this.setState({ item3Ch: this.state.inv[2].currCharges });
+                }
+              }
+            }
+          }
         })
         .catch(err => console.error('couldnt get invItems', err));
     }, 1500);
@@ -111,35 +121,58 @@ class Adventure extends React.Component {
   }
 
   nextEncounter = () => {
-    const item1 = this.state.inv[0];
-    item1.currCharges = this.state.item1Ch;
-    Items.updateItems(item1, item1.id);
-    if (this.state.inv[1] !== undefined) {
-      const item2 = this.state.inv[1];
-      item2.currCharges = this.state.item2Ch;
-      Items.updateItems(item2, item2.id);
-      if (this.state.inv[2] !== undefined) {
-        const item3 = this.state.inv[2];
-        item3.currCharges = this.state.item3Ch;
-        Items.updateItems(item3, item3.id);
+    if (this.state.inv[0] !== undefined) {
+      const item1 = this.state.inv[0];
+      item1.currCharges = this.state.item1Ch;
+      Items.updateItems(item1, item1.id);
+      if (this.state.inv[1] !== undefined) {
+        const item2 = this.state.inv[1];
+        item2.currCharges = this.state.item2Ch;
+        Items.updateItems(item2, item2.id);
+        if (this.state.inv[2] !== undefined) {
+          const item3 = this.state.inv[2];
+          item3.currCharges = this.state.item3Ch;
+          Items.updateItems(item3, item3.id);
+        }
       }
     }
     const newCamp = this.state.campObj;
-    newCamp.campaignPos = newCamp.campaignPos + 1;
-    this.setState({ campObj: newCamp});
+    if (newCamp.campaignPos <= 3) {
+      newCamp.campaignPos = newCamp.campaignPos + 1;
+    } else if (newCamp.campaignPos > 3) {
+      newCamp.campaignPos = 'final';
+    }
+    this.setState({ campObj: newCamp });
     const { char } = this.state;
     char.playerHP = this.state.currCharHP;
     CharData.updateChar(char.id, char);
     console.error(this.state.campObj);
     Campgn.updateCamp(this.state.campaign, this.state.campObj);
-    this.setState({ renderNext: true });
+    this.setState({
+      campaign: '',
+      encounter: {},
+      char: '',
+      currEnctr: '',
+      enemyProps: '',
+      campObj: '',
+      inv: [],
+      seedItems: [],
+      currCharHP: 0,
+      enemyHP: 0,
+      text: '',
+      item1Ch: 0,
+      item2Ch: 0,
+      item3Ch: 0,
+      renderNext: false,
+    });
+    setTimeout(() => {
+      this.restartCode();
+    }, 2000);
   }
 
   reloadEncounter = () => {
     if (this.state.renderNext === true) {
-      return <Link to={{ pathname: '/choose_item', state: { redirect: true, currCampaign: this.state.campaign } }}>
-                <button type="button" className="btn btn-secondary">Proceed to the Next fight!</button>
-              </Link>;
+      return <button type="button" onClick={ () => this.nextEncounter() } className="btn btn-secondary">Proceed to the Next fight!</button>;
     }
   }
 
@@ -184,8 +217,13 @@ class Adventure extends React.Component {
       this.printText(this.state.enemyProps.dmgTxt);
       this.printText(' Enemy HP:', this.state.enemyHP);
       if (this.state.enemyHP <= 0) {
+        console.error('final encounter', this.state.encounter.finalEnctr);
         this.printText(this.state.enemyProps.dthTxt);
-        this.nextEncounter();
+        if (this.state.encounter.finalEnctr === false) {
+          this.setState({ renderNext: true });
+        } else if (this.state.encounter.finalEnctr === true) {
+          this.printText('YOU WIN!');
+        }
       } else {
         setTimeout(() => {
           this.enemyAtk();
@@ -227,14 +265,54 @@ class Adventure extends React.Component {
           this.printText(' that item cannot be used!');
       }
       if (this.state.enemyHP <= 0) {
-        this.printText(' the enemy has been slain!');
-        this.nextEncounter();
+        this.printText(this.state.enemyProps.dthTxt);
+        this.setState({ renderNext: true });
       } else {
         setTimeout(() => {
           this.enemyAtk();
         }, 1500);
       }
     }, 1500);
+  }
+
+  restartCode = () => {
+    const { campaign } = this.props.location.state;
+    this.setState({ campaign });
+    console.error('running', this.state.campObj);
+    // const { charId } = this.props.location.state;
+    // this.setState({ charId });
+    this.getChar();
+    if (this.state.campObj === '') {
+      Campgn.getCampById(campaign)
+        .then((camp) => {
+          this.setState({ campObj: camp });
+          console.error(camp, 'current campaign object');
+          if (this.state.currEnctr === '') {
+            switch (camp.campaignPos) {
+              case 1:
+                this.setState({ currEnctr: camp.enctr1id });
+                break;
+              case 2:
+                this.setState({ currEnctr: camp.enctr2id });
+                break;
+              case 3:
+                this.setState({ currEnctr: camp.enctr3id });
+                break;
+              case 4:
+                this.setState({ currEnctr: camp.enctrFinal });
+                break;
+              default:
+                console.error('invalid campaignPos');
+            }
+            console.error(this.state.currEnctr, 'current encounter');
+            setTimeout(() => {
+              console.error('current encounter', this.state.currEnctr);
+              this.LoadEncounter(this.state.currEnctr);
+            }, 1000);
+          }
+        })
+        .catch(err => console.error('error', err));
+    }
   }
 
   componentDidMount() {
@@ -260,16 +338,7 @@ class Adventure extends React.Component {
                 this.setState({ currEnctr: camp.enctr3id });
                 break;
               case 4:
-                this.setState({ currEnctr: camp.enctr4id });
-                break;
-              case 5:
-                this.setState({ currEnctr: camp.enctr5id });
-                break;
-              case 6:
-                this.setState({ currEnctr: camp.enctr6id });
-                break;
-              case 'final':
-                this.setState({ currEnctr: camp.enctrFinalid });
+                this.setState({ currEnctr: camp.enctrFinal });
                 break;
               default:
                 console.error('invalid campaignPos');
