@@ -1,8 +1,9 @@
 /* eslint-disable max-len */
 /* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
 import React from 'react';
 import {
-  Link, BrowserRouter, Route, Redirect, Switch,
+  Link, Redirect,
 } from 'react-router-dom';
 
 import firebase from 'firebase/app';
@@ -27,30 +28,10 @@ class ChooseItem extends React.Component {
     defaultRedirect: false,
   }
 
-  displayLoading = () => {
-    return <div className={this.state.hiddenModal}>
-              <h3>Loading...</h3>
-           </div>;
-  };
+  displayLoading = () => <div className={this.state.hiddenModal}> <h3>Loading...</h3> </div>;
+
 
   componentDidMount() {
-    // if (this.props.location.state !== undefined) {
-    //   const { charId } = this.props.location.state;
-    //   console.error(charId);
-    //   const B = 'B';
-    //   const idCombo = B.concat(charId);
-    //   console.error(idCombo);
-    //   this.setState({ characterId: 'dogshit' });
-    //   console.error(this.state.characterId);
-    //   Campgn.getCamp(this.state.charId)
-    //     .then((res) => {
-    //       console.error(res);
-    //       if (res.length !== 0) {
-    //         this.setState({ defaultRedirect: true, currCamp: res[0] });
-    //       }
-    //     })
-    //     .catch(err => console.error('couldnt get cmpgns', err));
-    // } else {
     if (this.props.location.state !== undefined) {
       this.setState({ defaultRedirect: true });
     }
@@ -110,11 +91,17 @@ campGet = (charId) => {
     Chars.getCurrentChar(firebase.auth().currentUser.uid)
       .then((char) => {
         this.setState({ charId: char[0].id });
+        let passive = false;
+        // Add item IDs here to make sure they get checked as a passive.
+        if (itemId === 'RestoRing') {
+          passive = true;
+        }
         const newItem = {
           charid: char[0].id,
           itemid: itemId,
           currCharges: itemChrgs,
           modifier: '',
+          isPassive: passive,
         };
 
         Items.createInvItem(newItem);

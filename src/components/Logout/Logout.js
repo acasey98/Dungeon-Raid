@@ -14,8 +14,7 @@ class Logout extends React.Component {
     authed: false,
   }
 
-  logMeOut = (e) => {
-    e.preventDefault();
+  logMeOut = () => {
     firebase.auth().signOut();
   }
 
@@ -23,7 +22,7 @@ class Logout extends React.Component {
     // const { authed } = this.props;
     return (
           <div className="Logout">
-            <button className="btn btn-secondary">Logout</button>
+            <button className="btn btn-secondary" onClick={ () => this.logMeOut()}>Logout</button>
           </div>
     );
   }

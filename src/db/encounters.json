@@ -10,7 +10,7 @@
     "wargFight1": {
       "enctrType": "enemy",
       "enemyid": "RWarg",
-      "startTxt": "A massive ogre stands before you!",
+      "startTxt": "A hungry warg stands before you!",
       "endTxt": "That ogre wasn't a problem at all!",
       "finalEnctr": false,
       "itemDropid": "HPpot(S)"
@@ -18,7 +18,7 @@
     "spiderFight1": {
       "enctrType": "enemy",
       "enemyid": "BSpider",
-      "startTxt": "A massive ogre stands before you!",
+      "startTxt": "An overgrown spider stands before you!",
       "endTxt": "That ogre wasn't a problem at all!",
       "finalEnctr": false,
       "itemDropid": "HPpot(S)"
@@ -34,16 +34,16 @@
     "wargFight2": {
       "enctrType": "enemy",
       "enemyid": "RWarg",
-      "startTxt": "A massive ogre stands before you!",
-      "endTxt": "That ogre wasn't a problem at all!",
+      "startTxt": "A hungry warg stands before you!",
+      "endTxt": "That warg wasn't a problem at all!",
       "finalEnctr": true,
       "itemDropid": "HPpot(S)"
     },
     "spiderFight2": {
       "enctrType": "enemy",
       "enemyid": "BSpider",
-      "startTxt": "A massive ogre stands before you!",
-      "endTxt": "That ogre wasn't a problem at all!",
+      "startTxt": "An overgrown spider stands before you!",
+      "endTxt": "That spider wasn't a problem at all!",
       "finalEnctr": false,
       "itemDropid": "HPpot(S)"
     },

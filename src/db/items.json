@@ -4,6 +4,7 @@
       "usesCharges": true,
       "maxCharges": 1,
       "isPassive": false,
+      "passiveType": "",
       "dropChance": 25,
       "desc": "A small potion that restores 80 HP. One time use."
     },
@@ -12,6 +13,7 @@
       "usesCharges": true,
       "maxCharges": 2,
       "isPassive": false,
+      "passiveType": "",
       "dropChance": 15,
       "desc": "A medium potion that restores 60 HP. Two time use."
     },
@@ -20,6 +22,7 @@
       "usesCharges": true,
       "maxCharges": 3,
       "isPassive": false,
+      "passiveType": "",
       "dropChance": 10,
       "desc": "A large potion that restores 50 HP. Three time use."
     },
@@ -28,15 +31,26 @@
       "usesCharges": false,
       "maxCharges": 0,
       "isPassive": true,
+      "passiveType": "afterEnemyAtk",
       "dropChance": 10,
-      "desc": "A ring that restores 15hp to the wearer after an enemy attack."
+      "desc": "A ring that restores (WIS x 2) HP to the wearer after an enemy attack."
     },
     "Firebomb_": {
       "name": "Firebomb",
       "usesCharges": true,
       "maxCharges": 1,
       "isPassive": false,
+      "passiveType": "",
       "dropChance": 10,
       "desc": "A bomb that can be used to inflict 50 damage to an enemy."
-  }
+  },
+  "VampC_": {
+    "name": "Vampiric Charm",
+    "usesCharges": false,
+    "maxCharges": 0,
+    "isPassive": true,
+    "passiveType": "onAtk",
+    "dropChance": 10,
+    "desc": "A necklace that heals the wearer for 20% of the damage they deal."
+}
 }
