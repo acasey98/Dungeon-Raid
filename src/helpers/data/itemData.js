@@ -33,7 +33,7 @@ const getInvItems = () => new Promise((resolve, reject) => {
 });
 
 const updateItems = (updatedItem, itemId) => {
-  if (updatedItem.currCharges <= 0) {
+  if (updatedItem.currCharges <= 0 && updatedItem.isPassive === false) {
     axios.delete(`${baseUrl}/invItems/${itemId}.json`);
   } else {
     axios.put(`${baseUrl}/invItems/${itemId}.json`, updatedItem);

@@ -40,16 +40,27 @@ class Base extends React.Component {
 
   createCharacter = () => {
     const startingHP = (45 + (this.state.VIT * 5));
+    const startingMP = ((this.state.WIS * 5) + 5);
     const newChar = {
       uid: firebase.auth().currentUser.uid,
       playerHP: startingHP,
+      playerMP: startingMP,
       VIT: this.state.VIT,
       STR: this.state.STR,
       DEX: this.state.DEX,
       WIS: this.state.WIS,
       LCK: this.state.LCK,
+      text: '',
     };
     data.postCharacter(newChar);
+  }
+
+  statError = (errType) => {
+    if (errType === 'no_pts') {
+      this.setState({ text: 'You have no remaining stat points to allocate.' });
+    } else if (errType === 'cant_lower') {
+      this.setState({ text: 'That stat cannot be lower than 1' });
+    }
   }
 
   VITaddPnt = (e) => {
@@ -58,7 +69,7 @@ class Base extends React.Component {
       this.setState({ VIT: this.state.VIT + 1 });
       this.setState({ unassgndPts: this.state.unassgndPts - 1 });
     } else {
-      console.error('You have no remaining stat points to allocate.');
+      this.statError('no_pts');
     }
   }
 
@@ -68,7 +79,7 @@ class Base extends React.Component {
       this.setState({ VIT: this.state.VIT - 1 });
       this.setState({ unassgndPts: this.state.unassgndPts + 1 });
     } else {
-      console.error('That stat cannot be lower than 1');
+      this.statError('cant_lower');
     }
   }
 
@@ -78,7 +89,7 @@ class Base extends React.Component {
       this.setState({ STR: this.state.STR + 1 });
       this.setState({ unassgndPts: this.state.unassgndPts - 1 });
     } else {
-      console.error('You have no remaining stat points to allocate.');
+      this.statError('no_pts');
     }
   }
 
@@ -88,7 +99,7 @@ class Base extends React.Component {
       this.setState({ STR: this.state.STR - 1 });
       this.setState({ unassgndPts: this.state.unassgndPts + 1 });
     } else {
-      console.error('That stat cannot be lower than 1');
+      this.statError('cant_lower');
     }
   }
 
@@ -98,7 +109,7 @@ class Base extends React.Component {
       this.setState({ DEX: this.state.DEX + 1 });
       this.setState({ unassgndPts: this.state.unassgndPts - 1 });
     } else {
-      console.error('You have no remaining stat points to allocate.');
+      this.statError('no_pts');
     }
   }
 
@@ -108,7 +119,7 @@ class Base extends React.Component {
       this.setState({ DEX: this.state.DEX - 1 });
       this.setState({ unassgndPts: this.state.unassgndPts + 1 });
     } else {
-      console.error('That stat cannot be lower than 1');
+      this.statError('cant_lower');
     }
   }
 
@@ -118,7 +129,7 @@ class Base extends React.Component {
       this.setState({ WIS: this.state.WIS + 1 });
       this.setState({ unassgndPts: this.state.unassgndPts - 1 });
     } else {
-      console.error('You have no remaining stat points to allocate.');
+      this.statError('no_pts');
     }
   }
 
@@ -128,7 +139,7 @@ class Base extends React.Component {
       this.setState({ WIS: this.state.WIS - 1 });
       this.setState({ unassgndPts: this.state.unassgndPts + 1 });
     } else {
-      console.error('That stat cannot be lower than 1');
+      this.statError('cant_lower');
     }
   }
 
@@ -138,7 +149,7 @@ class Base extends React.Component {
       this.setState({ LCK: this.state.LCK + 1 });
       this.setState({ unassgndPts: this.state.unassgndPts - 1 });
     } else {
-      console.error('You have no remaining stat points to allocate.');
+      this.statError('no_pts');
     }
   }
 
@@ -148,7 +159,7 @@ class Base extends React.Component {
       this.setState({ LCK: this.state.LCK - 1 });
       this.setState({ unassgndPts: this.state.unassgndPts + 1 });
     } else {
-      console.error('That stat cannot be lower than 1');
+      this.statError('cant_lower');
     }
   }
 
@@ -157,6 +168,7 @@ class Base extends React.Component {
       <div className="statBtns">
         {this.renderRedirect()}
         <h2 id="pntsRemain">{this.state.unassgndPts} point(s) left.</h2>
+        <p>{this.state.text}</p>
         <div id="VIT" className="btn-group-vertical" role="group" aria-label="Basic example">
           <h2>VIT</h2>
           <button id="VIT_sub" type="button" className="btn btn-info" onClick={this.VITaddPnt}>+</button>

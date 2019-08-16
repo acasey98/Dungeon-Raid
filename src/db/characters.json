@@ -2,6 +2,7 @@
     "character1": {
       "uid": "12345",
       "playerHP": 45,
+      "playerMP": 2,
       "VIT": 1,
       "STR": 1,
       "DEX": 1,

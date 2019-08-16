@@ -11,6 +11,8 @@ import Logout from '../components/Logout/Logout';
 import Auth from '../components/Auth/Auth';
 import ChooseItem from '../components/Base/ChooseItem/ChooseItem';
 import Adventure from '../components/Adventure/Adventure';
+import youLose from '../components/youLose/youLose';
+import youWin from '../components/youWin/youWin';
 
 import fbConnection from '../helpers/data/connection';
 
@@ -65,6 +67,9 @@ class App extends React.Component {
                   <PrivateRoute path='/choose_item' component={ChooseItem} authed={authed}/>
 
                   <PrivateRoute path='/adventure' component={Adventure} authed={authed}/>
+
+                  <PrivateRoute path='/you_lose' component={youLose} authed={authed}/>
+                  <PrivateRoute path='/you_win' component={youWin} authed={authed}/>
 
                   <Redirect from='*' to='/auth' />
                 </Switch>
